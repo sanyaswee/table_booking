@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>TableBooking - Book a table</title>
+</head>
+<body>
+	<h1>Here you can book a table!</h1>
+	<p>In order to book a table, please fill in the form below:</p>
+	<form action="reservation">
+		<label>Please enter your name: </label>
+		<input type="text" name="name" required><br>
+		<label>Please enter amount of people (up to 6): </label>
+		<input type="number" name="amount_of_people" max="6" min="1" required><br>
+		<label>Please select a date: </label>
+		<input type="date" name="date" required><br>
+		<label>Please select a restaurant</label>
+		<select name="restaurant">
+			<option value="baco_tell">Baco Tell</option>
+			<option value="kurger_bing">Kurger Bing</option>
+			<option value="waysub">WaySub</option>
+			<option value="mcronalds">McRonalds</option>
+		</select>
+		<br>
+		<input type="submit" value="Book!">
+	</form>
+	<p><a href="/">Home</a></p>
+</body>
+</html>
