@@ -47,8 +47,11 @@ while true; do
                         rid) rid="$value" ;;
                     esac
                 done
-                SQL="DELETE FROM reservations WHERE id=$rid;"
+                SQL="SELECT name, reservation_date, restaurant FROM reservations WHERE id=$rid; DELETE FROM reservations WHERE id=$rid;"
                 db_resp=$(echo "$SQL" | nc localhost $DB_PORT)
+                name=$(echo "$db_resp" | awk "{print \$4}")
+                date=$(echo "$db_resp" | awk "{print \$5}")
+                restaurant=$(echo "$db_resp" | awk "{ s = \"\"; for (i = 6; i <= NF; i++) s = s \$i \" \"; print s }")
                 ;;
             "/reservation")
             	FILE="templates/reservation.html"
