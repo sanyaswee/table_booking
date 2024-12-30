@@ -35,30 +35,34 @@ while true; do
                 FILE="templates/cancel.html"
                 STATUS="200 OK"
                 ;;
+            "/canceled")
+                FILE="templates/canceled.html"
+                STATUS="200 OK"
+                ;;
             "/reservation")
             	FILE="templates/reservation.html"
             	STATUS="200 OK"
             	IFS="&" # Internal Field Separator for splitting key-value pairs
-		for pair in $ARGS; do
-		    key="${pair%%=*}"      # Extract key (part before '=')
-		    value="${pair#*=}"     # Extract value (part after '=')
-		    
-		    case $key in
-			name) name="$value" ;;
-			amount_of_people) amount_of_people="$value" ;;
-			date) date="$value" ;;
-			restaurant) restaurant="$value" ;;
-		    esac
-		    case $restaurant in
-		    	baco_tell) restaurant="Baco Tell" ;;
-		    	kurger_bing) restaurant="Kurger Bing" ;;
-		    	waysub) restaurant="WaySub" ;;
-		    	mcronalds) restaurant="McRonalds" ;;
-		    esac
-		done
-		SQL="INSERT INTO reservations (name, amount_of_people, reservation_date, restaurant) VALUES (\"$name\", $amount_of_people, \"$date\", \"$restaurant\"); SELECT LAST_INSERT_ID();"
-		db_resp=$(echo "$SQL" | nc localhost 7000)
-		reservation_id=$(echo "$db_resp" | awk "{print \$2}")
+        		for pair in $ARGS; do
+        		    key="${pair%%=*}"      # Extract key (part before '=')
+        		    value="${pair#*=}"     # Extract value (part after '=')
+        		    
+        		    case $key in
+        			name) name="$value" ;;
+        			amount_of_people) amount_of_people="$value" ;;
+        			date) date="$value" ;;
+        			restaurant) restaurant="$value" ;;
+        		    esac
+        		    case $restaurant in
+        		    	baco_tell) restaurant="Baco Tell" ;;
+        		    	kurger_bing) restaurant="Kurger Bing" ;;
+        		    	waysub) restaurant="WaySub" ;;
+        		    	mcronalds) restaurant="McRonalds" ;;
+        		    esac
+        		done
+        		SQL="INSERT INTO reservations (name, amount_of_people, reservation_date, restaurant) VALUES (\"$name\", $amount_of_people, \"$date\", \"$restaurant\"); SELECT LAST_INSERT_ID();"
+        		db_resp=$(echo "$SQL" | nc localhost 7000)
+        		reservation_id=$(echo "$db_resp" | awk "{print \$2}")
              	;;
             *)
                 FILE="templates/404.html"
