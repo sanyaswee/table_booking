@@ -10,7 +10,8 @@ echo "Visit http://localhost:$PORT to view the pages."
 # Infinite loop to handle incoming connections
 while true; do
     ncat -l -p $PORT -c '
-	# Read the first line of the HTTP request (e.g., GET /book HTTP/1.1)
+        DB_PORT=7000
+	    # Read the first line of the HTTP request (e.g., GET /book HTTP/1.1)
         REQUEST_DATA=""
         while IFS= read REQUEST_DATA; do
 		break
@@ -38,6 +39,16 @@ while true; do
             "/canceled")
                 FILE="templates/canceled.html"
                 STATUS="200 OK"
+                for pair in $ARGS; do
+                    key="${pair%%=*}"      # Extract key (part before '=')
+                    value="${pair#*=}"     # Extract value (part after '=')
+                    
+                    case $key in
+                        rid) rid="$value" ;;
+                    esac
+                done
+                SQL="DELETE FROM reservations WHERE id=$rid;"
+                db_resp=$(echo "$SQL" | nc localhost $DB_PORT)
                 ;;
             "/reservation")
             	FILE="templates/reservation.html"
@@ -48,10 +59,10 @@ while true; do
         		    value="${pair#*=}"     # Extract value (part after '=')
         		    
         		    case $key in
-        			name) name="$value" ;;
-        			amount_of_people) amount_of_people="$value" ;;
-        			date) date="$value" ;;
-        			restaurant) restaurant="$value" ;;
+            			name) name="$value" ;;
+            			amount_of_people) amount_of_people="$value" ;;
+            			date) date="$value" ;;
+            			restaurant) restaurant="$value" ;;
         		    esac
         		    case $restaurant in
         		    	baco_tell) restaurant="Baco Tell" ;;
@@ -61,7 +72,7 @@ while true; do
         		    esac
         		done
         		SQL="INSERT INTO reservations (name, amount_of_people, reservation_date, restaurant) VALUES (\"$name\", $amount_of_people, \"$date\", \"$restaurant\"); SELECT LAST_INSERT_ID();"
-        		db_resp=$(echo "$SQL" | nc localhost 7000)
+        		db_resp=$(echo "$SQL" | nc localhost $DB_PORT)
         		reservation_id=$(echo "$db_resp" | awk "{print \$2}")
              	;;
             *)
