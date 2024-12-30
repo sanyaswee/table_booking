@@ -79,6 +79,22 @@ while true; do
         		db_resp=$(echo "$SQL" | nc localhost $DB_PORT)
         		reservation_id=$(echo "$db_resp" | awk "{print \$2}")
              	;;
+            "/reservations")
+                FILE="templates/reservations.html"
+                STATUS="200 OK"
+                SQL="SELECT id FROM reservations;"
+                db_resp=$(echo "$SQL" | nc localhost $DB_PORT)
+                ids=$(echo "$db_resp" | awk "{ s = \"\"; for (i = 2; i <= NF; i++) s = s \$i \" \"; print s }")
+                reservations=""
+                for i in ids; do
+                    SQL="SELECT name, reservation_date, restaurant WHERE id=$i;"
+                    db_resp=$(echo "$SQL" | nc localhost $DB_PORT)
+                    name=$(echo "$db_resp" | awk "{print \$4}")
+                    date=$(echo "$db_resp" | awk "{print \$5}")
+                    restaurant=$(echo "$db_resp" | awk "{ s = \"\"; for (i = 6; i <= NF; i++) s = s \$i \" \"; print s }")
+                    reservations="${reservations}<tr><td>$name<td><td>$restaurant<td><td>$date<td></tr>"
+                done
+                ;;
             *)
                 FILE="templates/404.html"
                 STATUS="404 Not Found"
