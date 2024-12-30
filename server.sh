@@ -92,7 +92,7 @@ while true; do
                     name=$(echo "$db_resp" | awk "{print \$4}")
                     date=$(echo "$db_resp" | awk "{print \$5}")
                     restaurant=$(echo "$db_resp" | awk "{ s = \"\"; for (i = 6; i <= NF; i++) s = s \$i \" \"; print s }")
-                    reservations="${reservations}<tr><td>$name<td><td>$restaurant<td><td>$date<td></tr>"
+                    reservations="${reservations}<tr><td>$name</td><td>$restaurant</td><td>$date</td></tr>"
                 done
                 ;;
             *)
