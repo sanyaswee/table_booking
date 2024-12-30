@@ -31,6 +31,7 @@ while true; do
             "/book")
                 FILE="templates/book.html"
                 STATUS="200 OK"
+                today=$(date +"%Y-%m-%d")
                 ;;
             "/cancel")
                 FILE="templates/cancel.html"
