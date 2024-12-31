@@ -5,7 +5,7 @@ PORT=8080
 
 # Main loop to listen for incoming HTTP requests
 echo "Starting web server on port $PORT..."
-echo "Visit http://localhost:$PORT to view the pages."
+echo "Visit http://localhost:$PORT to view the website."
 
 # Infinite loop to handle incoming connections
 while true; do
