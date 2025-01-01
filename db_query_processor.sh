@@ -4,6 +4,6 @@ PWD=$(cat pwd.txt)
 HOST="localhost"
 DB="table_booking"
 
-# Read query respond
+# Read query and respond
 read QUERY
 echo $(mysql -u $USER -p$PWD -h $HOST -D $DB -e "$QUERY")
